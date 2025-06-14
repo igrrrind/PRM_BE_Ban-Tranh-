@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      UserID: {
+      userID: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -18,10 +18,10 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      TotalPrice: {
+      totalPrice: {
         type: Sequelize.FLOAT
       },
-      Status: {
+      status: {
         type: Sequelize.STRING
       },
       createdAt: {

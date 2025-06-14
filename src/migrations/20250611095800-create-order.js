@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      CartID: {
+      cartID: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Carts',
@@ -18,7 +18,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      UserID: {
+      userID: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -27,16 +27,16 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      PaymentMethod: {
+      paymentMethod: {
         type: Sequelize.STRING
       },
-      BillingAddress: {
+      billingAddress: {
         type: Sequelize.STRING
       },
-      OrderStatus: {
+      orderStatus: {
         type: Sequelize.STRING
       },
-      OrderDate: {
+      orderDate: {
         type: Sequelize.DATE
       },
       createdAt: {

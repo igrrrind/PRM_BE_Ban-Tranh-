@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      OrderID: {
+      orderID: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Orders',
@@ -18,13 +18,13 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      Amount: {
+      amount: {
         type: Sequelize.FLOAT
       },
-      PaymentDate: {
+      paymentDate: {
         type: Sequelize.DATE
       },
-      PaymentStatus: {
+      paymentStatus: {
         type: Sequelize.STRING
       },
       createdAt: {

@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Payment belongsTo Order
-      Payment.belongsTo(models.Order, { foreignKey: 'OrderID' });
+      Payment.belongsTo(models.Order, { foreignKey: 'orderID' });
     }
   }
   Payment.init({
-    OrderID: DataTypes.INTEGER,
-    Amount: DataTypes.FLOAT,
-    PaymentDate: DataTypes.DATE,
-    PaymentStatus: DataTypes.STRING
+    orderID: DataTypes.INTEGER,
+    amount: DataTypes.FLOAT,
+    paymentDate: DataTypes.DATE,
+    paymentStatus: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Payment',

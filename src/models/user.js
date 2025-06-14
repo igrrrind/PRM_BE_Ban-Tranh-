@@ -11,22 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // User hasMany Cart
-      User.hasMany(models.Cart, { foreignKey: 'UserID' });
+      User.hasMany(models.Cart, { foreignKey: 'userID' });
       // User hasMany Order
-      User.hasMany(models.Order, { foreignKey: 'UserID' });
+      User.hasMany(models.Order, { foreignKey: 'userID' });
       // User hasMany Notification
-      User.hasMany(models.Notification, { foreignKey: 'UserID' });
+      User.hasMany(models.Notification, { foreignKey: 'userID' });
       // User hasMany ChatMessage
-      User.hasMany(models.ChatMessage, { foreignKey: 'UserID' });
+      User.hasMany(models.ChatMessage, { foreignKey: 'userID' });
     }
   }
   User.init({
-    Username: DataTypes.STRING,
-    PasswordHash: DataTypes.STRING,
-    Email: DataTypes.STRING,
-    PhoneNumber: DataTypes.STRING,
-    Address: DataTypes.STRING,
-    Role: DataTypes.STRING
+    username: DataTypes.STRING,
+    passwordHash: DataTypes.STRING,
+    email: DataTypes.STRING,
+    phoneNumber: DataTypes.STRING,
+    address: DataTypes.STRING,
+    role: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',

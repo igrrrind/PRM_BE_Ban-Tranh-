@@ -9,25 +9,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ProductName: {
+      productName: {
         type: Sequelize.STRING
       },
-      BriefDescription: {
+      briefDescription: {
         type: Sequelize.STRING
       },
-      FullDescription: {
+      fullDescription: {
         type: Sequelize.TEXT
       },
-      TechnicalSpecifications: {
+      technicalSpecifications: {
         type: Sequelize.TEXT
       },
-      Price: {
+      price: {
         type: Sequelize.FLOAT
       },
-      ImageURL: {
+      imageURL: {
         type: Sequelize.STRING
       },
-      CategoryID: {
+      categoryID: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Categories',

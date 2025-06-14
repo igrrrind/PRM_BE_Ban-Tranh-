@@ -9,13 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      Latitude: {
+      latitude: {
         type: Sequelize.FLOAT
       },
-      Longitude: {
+      longitude: {
         type: Sequelize.FLOAT
       },
-      Address: {
+      address: {
         type: Sequelize.STRING
       },
       createdAt: {

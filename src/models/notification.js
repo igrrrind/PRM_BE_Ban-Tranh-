@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Notification belongsTo User
-      Notification.belongsTo(models.User, { foreignKey: 'UserID' });
+      Notification.belongsTo(models.User, { foreignKey: 'userID' });
     }
   }
   Notification.init({
-    UserID: DataTypes.INTEGER,
-    Message: DataTypes.STRING,
-    IsRead: DataTypes.BOOLEAN,
-    CreatedAt: DataTypes.DATE
+    userID: DataTypes.INTEGER,
+    message: DataTypes.STRING,
+    isRead: DataTypes.BOOLEAN,
+    createdAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Notification',

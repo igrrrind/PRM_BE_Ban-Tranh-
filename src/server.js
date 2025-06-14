@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/user.routes');
+const productRoutes = require('./routes/product.routes');
 const db = require('./models');
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 });
 // Routes
 app.use('/api/user', userRoutes);
+app.use('/api/products', productRoutes);
 
 const startServer = async () => {
   try {

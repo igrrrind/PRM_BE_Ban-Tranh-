@@ -11,20 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Order belongsTo Cart
-      Order.belongsTo(models.Cart, { foreignKey: 'CartID' });
+      Order.belongsTo(models.Cart, { foreignKey: 'cartID' });
       // Order belongsTo User
-      Order.belongsTo(models.User, { foreignKey: 'UserID' });
+      Order.belongsTo(models.User, { foreignKey: 'userID' });
       // Order hasOne Payment
-      Order.hasOne(models.Payment, { foreignKey: 'OrderID' });
+      Order.hasOne(models.Payment, { foreignKey: 'orderID' });
     }
   }
   Order.init({
-    CartID: DataTypes.INTEGER,
-    UserID: DataTypes.INTEGER,
-    PaymentMethod: DataTypes.STRING,
-    BillingAddress: DataTypes.STRING,
-    OrderStatus: DataTypes.STRING,
-    OrderDate: DataTypes.DATE
+    cartID: DataTypes.INTEGER,
+    userID: DataTypes.INTEGER,
+    paymentMethod: DataTypes.STRING,
+    billingAddress: DataTypes.STRING,
+    orderStatus: DataTypes.STRING,
+    orderDate: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Order',

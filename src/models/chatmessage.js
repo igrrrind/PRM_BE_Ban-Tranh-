@@ -11,14 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // ChatMessage belongsTo User
-      ChatMessage.belongsTo(models.User, { foreignKey: 'UserID' });
+      ChatMessage.belongsTo(models.User, { foreignKey: 'userID' });
     }
   }
   ChatMessage.init({
-    ChatMessageID: DataTypes.INTEGER,
-    UserID: DataTypes.INTEGER,
-    Message: DataTypes.STRING,
-    SentAt: DataTypes.DATE
+    userID: DataTypes.INTEGER,
+    message: DataTypes.STRING,
+    sentAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'ChatMessage',

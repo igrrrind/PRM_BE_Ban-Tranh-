@@ -11,19 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Product belongsTo Category
-      Product.belongsTo(models.Category, { foreignKey: 'CategoryID' });
+      Product.belongsTo(models.Category, { foreignKey: 'categoryID', as: 'category' });
       // Product hasMany CartItem
-      Product.hasMany(models.CartItem, { foreignKey: 'ProductID' });
+      Product.hasMany(models.CartItem, { foreignKey: 'productID' });
     }
   }
   Product.init({
-    ProductName: DataTypes.STRING,
-    BriefDescription: DataTypes.STRING,
-    FullDescription: DataTypes.TEXT,
-    TechnicalSpecifications: DataTypes.TEXT,
-    Price: DataTypes.FLOAT,
-    ImageURL: DataTypes.STRING,
-    CategoryID: DataTypes.INTEGER
+    productName: DataTypes.STRING,
+    briefDescription: DataTypes.STRING,
+    fullDescription: DataTypes.TEXT,
+    technicalSpecifications: DataTypes.TEXT,
+    price: DataTypes.FLOAT,
+    imageURL: DataTypes.STRING,
+    categoryID: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Product',
