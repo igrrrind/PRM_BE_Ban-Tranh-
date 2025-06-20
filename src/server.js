@@ -2,6 +2,12 @@ const express = require('express');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/user.routes');
 const productRoutes = require('./routes/product.routes');
+const categoryRoutes = require('./routes/category.routes');
+const cartRoutes = require('./routes/cart.routes');
+const cartItemRoutes = require('./routes/cartitem.routes');
+const orderRoutes = require('./routes/order.routes');
+const chatMessageRoutes = require('./routes/chatmessage.routes');
+const storeLocationRoutes = require('./routes/storelocation.routes');
 const db = require('./models');
 
 dotenv.config();
@@ -15,6 +21,12 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/user', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/carts', cartRoutes);
+app.use('/api/cartitems', cartItemRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/chatmessages', chatMessageRoutes);
+app.use('/api/storelocations', storeLocationRoutes);
 
 const startServer = async () => {
   try {
