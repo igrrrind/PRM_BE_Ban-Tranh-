@@ -9,11 +9,13 @@ const orderRoutes = require('./routes/order.routes');
 const chatMessageRoutes = require('./routes/chatmessage.routes');
 const storeLocationRoutes = require('./routes/storelocation.routes');
 const db = require('./models');
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Server is running!');
