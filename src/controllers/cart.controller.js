@@ -65,3 +65,13 @@ exports.deleteCart = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Get carts by user ID
+exports.getCartsByUserId = async (req, res) => {
+  try {
+    const carts = await Cart.findAll({ where: { userID: req.params.userId } });
+    res.json(carts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -8,6 +8,7 @@ const cartItemRoutes = require('./routes/cartitem.routes');
 const orderRoutes = require('./routes/order.routes');
 const chatMessageRoutes = require('./routes/chatmessage.routes');
 const storeLocationRoutes = require('./routes/storelocation.routes');
+const authRoutes = require('./routes/auth.routes');
 const db = require('./models');
 const cors = require('cors');
 
@@ -29,6 +30,7 @@ app.use('/api/cartitems', cartItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/chatmessages', chatMessageRoutes);
 app.use('/api/storelocations', storeLocationRoutes);
+app.use('/api/auth', authRoutes);
 
 const startServer = async () => {
   try {

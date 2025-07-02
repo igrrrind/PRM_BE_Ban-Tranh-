@@ -59,3 +59,13 @@ exports.deleteChatMessage = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Get chat messages by user ID
+exports.getChatMessagesByUserId = async (req, res) => {
+  try {
+    const messages = await ChatMessage.findAll({ where: { userID: req.params.userId } });
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

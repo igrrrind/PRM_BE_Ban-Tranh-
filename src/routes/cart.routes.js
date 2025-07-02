@@ -7,5 +7,6 @@ router.get('/:id', cartController.getCartById);
 router.post('/', cartController.createCart);
 router.put('/:id', cartController.updateCart);
 router.delete('/:id', cartController.deleteCart);
+router.get('/user/:userId', cartController.getCartsByUserId);
 
 module.exports = router;

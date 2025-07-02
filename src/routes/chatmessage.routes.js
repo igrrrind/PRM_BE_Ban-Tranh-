@@ -7,5 +7,6 @@ router.get('/:id', chatMessageController.getChatMessageById);
 router.post('/', chatMessageController.createChatMessage);
 router.put('/:id', chatMessageController.updateChatMessage);
 router.delete('/:id', chatMessageController.deleteChatMessage);
+router.get('/user/:userId', chatMessageController.getChatMessagesByUserId);
 
 module.exports = router;

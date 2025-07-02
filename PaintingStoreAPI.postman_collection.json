@@ -1,0 +1,100 @@
+{
+  "info": {
+    "_postman_id": "painting-store-api-2025",
+    "name": "Painting Store API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        { "name": "Get Users", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/user" } },
+        { "name": "Get User By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/user/:id" } },
+        { "name": "Create User", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/user", "body": { "mode": "raw", "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"email\": \"newuser@example.com\",\n  \"phoneNumber\": \"1234567890\",\n  \"address\": \"123 Main St\",\n  \"role\": \"customer\"\n}" } } },
+        { "name": "Update User", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/user/:id", "body": { "mode": "raw", "raw": "{\n  \"email\": \"updated@example.com\"\n}" } } },
+        { "name": "Delete User", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/user/:id" } }
+      ]
+    },
+    {
+      "name": "Product",
+      "item": [
+        { "name": "Get All Products", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/products" } },
+        { "name": "Get Product By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/products/:id" } },
+        { "name": "Create Product", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/products", "body": { "mode": "raw", "raw": "{\n  \"productName\": \"Sample Painting\",\n  \"briefDescription\": \"A beautiful painting\",\n  \"fullDescription\": \"Full details...\",\n  \"technicalSpecifications\": \"Oil on canvas\",\n  \"price\": 100,\n  \"imageURL\": \"https://example.com/image.jpg\",\n  \"categoryID\": 1\n}" } } },
+        { "name": "Update Product", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/products/:id", "body": { "mode": "raw", "raw": "{\n  \"productName\": \"Updated Painting\"\n}" } } },
+        { "name": "Delete Product", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/products/:id" } }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        { "name": "Get All Categories", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/categories" } },
+        { "name": "Get Category By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id" } },
+        { "name": "Create Category", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/categories", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"New Category\"\n}" } } },
+        { "name": "Update Category", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"Updated Category\"\n}" } } },
+        { "name": "Delete Category", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id" } }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        { "name": "Get All Carts", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/carts" } },
+        { "name": "Get Cart By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/carts/:id" } },
+        { "name": "Get Carts By User ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/carts/user/:userId" } },
+        { "name": "Create Cart", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/carts", "body": { "mode": "raw", "raw": "{\n  \"userID\": 1,\n  \"totalPrice\": 100,\n  \"status\": \"active\"\n}" } } },
+        { "name": "Update Cart", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/carts/:id", "body": { "mode": "raw", "raw": "{\n  \"status\": \"completed\"\n}" } } },
+        { "name": "Delete Cart", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/carts/:id" } }
+      ]
+    },
+    {
+      "name": "CartItem",
+      "item": [
+        { "name": "Get All CartItems", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/cartitems" } },
+        { "name": "Get CartItem By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/cartitems/:id" } },
+        { "name": "Create CartItem", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/cartitems", "body": { "mode": "raw", "raw": "{\n  \"cartID\": 1,\n  \"productID\": 1,\n  \"quantity\": 2,\n  \"price\": 200\n}" } } },
+        { "name": "Update CartItem", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/cartitems/:id", "body": { "mode": "raw", "raw": "{\n  \"quantity\": 3\n}" } } },
+        { "name": "Delete CartItem", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/cartitems/:id" } }
+      ]
+    },
+    {
+      "name": "Order",
+      "item": [
+        { "name": "Get All Orders", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders" } },
+        { "name": "Get Order By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } },
+        { "name": "Get Orders By User ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/user/:userId" } },
+        { "name": "Create Order", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/orders", "body": { "mode": "raw", "raw": "{\n  \"cartID\": 1,\n  \"userID\": 1,\n  \"paymentMethod\": \"VNPay\",\n  \"billingAddress\": \"123 Art St\",\n  \"orderStatus\": \"processing\",\n  \"orderDate\": \"2025-07-02T00:00:00.000Z\"\n}" } } },
+        { "name": "Update Order", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id", "body": { "mode": "raw", "raw": "{\n  \"orderStatus\": \"shipped\"\n}" } } },
+        { "name": "Delete Order", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } }
+      ]
+    },
+    {
+      "name": "ChatMessage",
+      "item": [
+        { "name": "Get All ChatMessages", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/chatmessages" } },
+        { "name": "Get ChatMessage By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/chatmessages/:id" } },
+        { "name": "Get ChatMessages By User ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/chatmessages/user/:userId" } },
+        { "name": "Create ChatMessage", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/chatmessages", "body": { "mode": "raw", "raw": "{\n  \"userID\": 1,\n  \"message\": \"Hello!\",\n  \"sentAt\": \"2025-07-02T00:00:00.000Z\"\n}" } } },
+        { "name": "Update ChatMessage", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/chatmessages/:id", "body": { "mode": "raw", "raw": "{\n  \"message\": \"Updated message\"\n}" } } },
+        { "name": "Delete ChatMessage", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/chatmessages/:id" } }
+      ]
+    },
+    {
+      "name": "StoreLocation",
+      "item": [
+        { "name": "Get All StoreLocations", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/storelocations" } },
+        { "name": "Get StoreLocation By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/storelocations/:id" } },
+        { "name": "Create StoreLocation", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/storelocations", "body": { "mode": "raw", "raw": "{\n  \"latitude\": 40.712776,\n  \"longitude\": -74.005974,\n  \"address\": \"789 Gallery Rd, Paint City\"\n}" } } },
+        { "name": "Update StoreLocation", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/storelocations/:id", "body": { "mode": "raw", "raw": "{\n  \"address\": \"New Address\"\n}" } } },
+        { "name": "Delete StoreLocation", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/storelocations/:id" } }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        { "name": "Register", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/auth/register", "body": { "mode": "raw", "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"email\": \"newuser@example.com\",\n  \"phoneNumber\": \"1234567890\",\n  \"address\": \"123 Main St\",\n  \"role\": \"customer\"\n}" } } },
+        { "name": "Login", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/auth/login", "body": { "mode": "raw", "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\"\n}" } } },
+        { "name": "Me (Get current user)", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/auth/me", "header": [ { "key": "Authorization", "value": "Bearer {{jwt_token}}" } ] } }
+      ]
+    }
+  ]
+}
