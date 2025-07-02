@@ -91,9 +91,56 @@
     {
       "name": "Auth",
       "item": [
-        { "name": "Register", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/auth/register", "body": { "mode": "raw", "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"email\": \"newuser@example.com\",\n  \"phoneNumber\": \"1234567890\",\n  \"address\": \"123 Main St\",\n  \"role\": \"customer\"\n}" } } },
-        { "name": "Login", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/auth/login", "body": { "mode": "raw", "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\"\n}" } } },
-        { "name": "Me (Get current user)", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/auth/me", "header": [ { "key": "Authorization", "value": "Bearer {{jwt_token}}" } ] } }
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "https://web-production-b71f7.up.railway.app/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"email\": \"newuser@example.com\",\n  \"phoneNumber\": \"1234567890\",\n  \"address\": \"123 Main St\",\n  \"role\": \"customer\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "https://web-production-b71f7.up.railway.app/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": "https://web-production-b71f7.up.railway.app/api/auth/refresh",
+            "description": "Get a new access token using the refresh token (sent as httpOnly cookie). No body required."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "https://web-production-b71f7.up.railway.app/api/auth/logout",
+            "description": "Logout user and clear refresh token cookie. No body required."
+          }
+        },
+        {
+          "name": "Me (Get current user)",
+          "request": {
+            "method": "GET",
+            "url": "https://web-production-b71f7.up.railway.app/api/auth/me",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ]
+          }
+        }
       ]
     }
   ]
