@@ -33,19 +33,30 @@ function generateTokens(user) {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
+    // Get user and all associated models (except passwordHash)
+    const user = await User.findOne({
+      where: { email },
+      attributes: { exclude: ['passwordHash'] },
+      include: [
+        // Add your associations here, e.g.:
+        // { model: Profile },
+        // { model: Order },
+        // { model: Cart },
+      ]
+    });
     if (!user) return res.status(401).json({ error: 'Invalid email' });
-    const valid = await bcrypt.compare(password, user.passwordHash);
+    // Need to get passwordHash for comparison
+    const userWithHash = await User.findOne({ where: { email } });
+    const valid = await bcrypt.compare(password, userWithHash.passwordHash);
     if (!valid) return res.status(401).json({ error: 'Invalid password' });
-    const { accessToken, refreshToken } = generateTokens(user);
-    // For browser: set httpOnly cookie. For mobile: return in JSON.
+    const { accessToken, refreshToken } = generateTokens(userWithHash);
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
-    res.json({ accessToken, refreshToken });
+    res.json({ accessToken, refreshToken, user });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
