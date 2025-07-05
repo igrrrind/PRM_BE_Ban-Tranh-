@@ -32,11 +32,11 @@ function generateTokens(user) {
 
 exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ where: { username } });
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(401).json({ error: 'Invalid email' });
     const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!valid) return res.status(401).json({ error: 'Invalid password' });
     const { accessToken, refreshToken } = generateTokens(user);
     // For browser: set httpOnly cookie. For mobile: return in JSON.
     res.cookie('refreshToken', refreshToken, {
