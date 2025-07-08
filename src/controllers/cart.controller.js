@@ -67,10 +67,10 @@ exports.deleteCart = async (req, res) => {
 };
 
 // Get carts by user ID
-exports.getCartsByUserId = async (req, res) => {
+exports.getCartByUserId = async (req, res) => {
   try {
-    const carts = await Cart.findAll({ where: { userID: req.params.userId } });
-    res.json(carts);
+    const cart = await Cart.findOne({ where: { userId: req.params.userId } });
+    res.json(cart);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
