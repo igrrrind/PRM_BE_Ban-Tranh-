@@ -1,3 +1,60 @@
+// Add to cart (POST /add-cart/:userId)
+exports.addToCart = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { productId, quantity } = req.body;
+    if (!productId || !quantity) return res.status(400).json({ error: 'productId and quantity are required' });
+    let cart = await Cart.findOne({ where: { userID: userId } });
+    if (!cart) {
+      cart = await Cart.create({ userID: userId, status: 'active', totalPrice: 0 });
+    }
+    let cartItem = await CartItem.findOne({ where: { cartID: cart.id, productID: productId } });
+    if (cartItem) {
+      cartItem.quantity += quantity;
+      await cartItem.save();
+    } else {
+      cartItem = await CartItem.create({ cartID: cart.id, productID: productId, quantity });
+    }
+    res.status(200).json({ cart, cartItem });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// Update cart item quantity (PUT /update-cart/:userId)
+exports.updateCartItem = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { productId, quantity } = req.body;
+    if (!productId || !quantity) return res.status(400).json({ error: 'productId and quantity are required' });
+    const cart = await Cart.findOne({ where: { userID: userId } });
+    if (!cart) return res.status(404).json({ error: 'Cart not found' });
+    const cartItem = await CartItem.findOne({ where: { cartID: cart.id, productID: productId } });
+    if (!cartItem) return res.status(404).json({ error: 'Cart item not found' });
+    cartItem.quantity = quantity;
+    await cartItem.save();
+    res.json(cartItem);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// Remove product from cart (DELETE /remove-item/:userId)
+exports.removeFromCart = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { productId } = req.body;
+    if (!productId) return res.status(400).json({ error: 'productId is required' });
+    const cart = await Cart.findOne({ where: { userID: userId } });
+    if (!cart) return res.status(404).json({ error: 'Cart not found' });
+    const cartItem = await CartItem.findOne({ where: { cartID: cart.id, productID: productId } });
+    if (!cartItem) return res.status(404).json({ error: 'Cart item not found' });
+    await cartItem.destroy();
+    res.json({ message: 'Product removed from cart' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 const { Cart, User, CartItem } = require('../models');
 
 // Get all carts with user and items

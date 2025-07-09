@@ -31,21 +31,119 @@
         { "name": "Get All Categories", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/categories" } },
         { "name": "Get Category By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id" } },
         { "name": "Create Category", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/categories", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"New Category\"\n}" } } },
-        { "name": "Update Category", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"Updated Category\"\n}" } } },
+{ "name": "Update Category", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"Updated Category\"\n}" } } },
         { "name": "Delete Category", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id" } }
       ]
     },
     {
-      "name": "Cart",
-      "item": [
-        { "name": "Get All Carts", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/carts" } },
-        { "name": "Get Cart By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/carts/:id" } },
-        { "name": "Get Carts By User ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/carts/user/:userId" } },
-        { "name": "Create Cart", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/carts", "body": { "mode": "raw", "raw": "{\n  \"userID\": 1,\n  \"totalPrice\": 100,\n  \"status\": \"active\"\n}" } } },
-        { "name": "Update Cart", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/carts/:id", "body": { "mode": "raw", "raw": "{\n  \"status\": \"completed\"\n}" } } },
-        { "name": "Delete Cart", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/carts/:id" } }
-      ]
+  "name": "Cart",
+  "item": [
+    {
+      "name": "Get All Carts",
+      "request": {
+        "method": "GET",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts"
+      }
     },
+    {
+      "name": "Get Cart By ID",
+      "request": {
+        "method": "GET",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts/:id"
+      }
+    },
+    {
+      "name": "Get Cart By User ID",
+      "request": {
+        "method": "GET",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts/user/:userId"
+      }
+    },
+    {
+      "name": "Create Cart",
+      "request": {
+        "method": "POST",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"totalPrice\": 100,\n  \"status\": \"active\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Modify Cart",
+      "request": {
+        "method": "PUT",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts/:id",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"completed\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Add To Cart",
+      "request": {
+        "method": "POST",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts/add-cart/:userId",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "description": "Add a product to the user's cart. Creates a cart if none exists."
+    },
+    {
+      "name": "Update Cart Item",
+      "request": {
+        "method": "PUT",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts/update-cart/:userId",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": 1,\n  \"quantity\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "description": "Update the quantity of a product in the user's cart."
+    },
+    {
+      "name": "Remove From Cart",
+      "request": {
+        "method": "DELETE",
+        "url": "https://web-production-b71f7.up.railway.app/api/carts/remove-item/:userId",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "description": "Remove a product from the user's cart."
+    }
+  ]
+},
     {
       "name": "CartItem",
       "item": [
@@ -62,7 +160,7 @@
         { "name": "Get All Orders", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders" } },
         { "name": "Get Order By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } },
         { "name": "Get Orders By User ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/user/:userId" } },
-        { "name": "Create Order", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/orders", "body": { "mode": "raw", "raw": "{\n  \"cartID\": 1,\n  \"userID\": 1,\n  \"paymentMethod\": \"VNPay\",\n  \"billingAddress\": \"123 Art St\",\n  \"orderStatus\": \"processing\",\n  \"orderDate\": \"2025-07-02T00:00:00.000Z\"\n}" } } },
+{ "name": "Create Order", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/orders", "body": { "mode": "raw", "raw": "{\n  \"cartID\": 1,\n  \"userID\": 1,\n  \"paymentMethod\": \"VNPay\",\n  \"billingAddress\": \"123 Art St\",\n  \"orderStatus\": \"processing\",\n  \"orderDate\": \"2025-07-02T00:00:00.000Z\"\n}" } } },
         { "name": "Update Order", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id", "body": { "mode": "raw", "raw": "{\n  \"orderStatus\": \"shipped\"\n}" } } },
         { "name": "Delete Order", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } }
       ]
@@ -90,7 +188,7 @@
     },
     {
       "name": "Auth",
-      "item": [
+"item": [
         {
           "name": "Register",
           "request": {
