@@ -1,4 +1,5 @@
-// Add to cart (POST /add-cart/:userId)
+const { Product } = require('../models');
+
 exports.addToCart = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -8,13 +9,22 @@ exports.addToCart = async (req, res) => {
     if (!cart) {
       cart = await Cart.create({ userID: userId, status: 'active', totalPrice: 0 });
     }
+    // Get product price
+    const product = await Product.findByPk(productId);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
     let cartItem = await CartItem.findOne({ where: { cartID: cart.id, productID: productId } });
     if (cartItem) {
       cartItem.quantity += quantity;
+      cartItem.price = product.price;
       await cartItem.save();
     } else {
-      cartItem = await CartItem.create({ cartID: cart.id, productID: productId, quantity });
+      cartItem = await CartItem.create({ cartID: cart.id, productID: productId, quantity, price: product.price });
     }
+    // Update cart total
+    const allItems = await CartItem.findAll({ where: { cartID: cart.id } });
+    const total = allItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    cart.totalPrice = total;
+    await cart.save();
     res.status(200).json({ cart, cartItem });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -126,7 +136,15 @@ exports.deleteCart = async (req, res) => {
 // Get carts by user ID
 exports.getCartByUserId = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ where: { userId: req.params.userId } });
+    const cart = await Cart.findOne({
+      where: { userID: req.params.userId },
+      include: [{ model: CartItem, as: 'CartItems' }]
+    });
+    if (!cart) return res.status(404).json({ error: 'Cart not found' });
+    // Recalculate total from items for accuracy
+    const total = (cart.CartItems || []).reduce((sum, item) => sum + item.quantity * item.price, 0);
+    cart.totalPrice = total;
+    await cart.save();
     res.json(cart);
   } catch (err) {
     res.status(500).json({ error: err.message });
