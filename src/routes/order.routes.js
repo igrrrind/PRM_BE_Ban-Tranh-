@@ -5,7 +5,6 @@ const orderController = require('../controllers/order.controller');
 
 // Checkout endpoint (new workflow)
 router.post('/checkout/:type', orderController.checkout);
-
 router.get('/', orderController.getAllOrders);
 router.get('/:id', orderController.getOrderById);
 router.post('/', orderController.createOrder);

@@ -88,7 +88,7 @@ exports.getCartById = async (req, res) => {
     const cart = await Cart.findByPk(req.params.id, {
       include: [
         { model: User, as: 'User' },
-        { model: CartItem, as: 'CartItems' }
+        { model: CartItem, as: 'CartItems', include: [{ model: Product, as: 'Product' }] }
       ]
     });
     if (!cart) return res.status(404).json({ error: 'Cart not found' });
@@ -138,7 +138,7 @@ exports.getCartByUserId = async (req, res) => {
   try {
     const cart = await Cart.findOne({
       where: { userID: req.params.userId },
-      include: [{ model: CartItem, as: 'CartItems' }]
+      include: [{ model: CartItem, as: 'CartItems', include: [{ model: Product, as: 'Product' }] }]
     });
     if (!cart) return res.status(404).json({ error: 'Cart not found' });
     // Recalculate total from items for accuracy
