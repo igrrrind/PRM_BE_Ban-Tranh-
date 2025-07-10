@@ -18,7 +18,22 @@
     {
       "name": "Product",
       "item": [
-        { "name": "Get All Products", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/products" } },
+        { "name": "Get All Products (with search, filter, sort)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://web-production-b71f7.up.railway.app/api/products?search=Modern&categoryId=3&sort=price_desc",
+              "host": ["https://web-production-b71f7.up.railway.app"],
+              "path": ["api", "products"],
+              "query": [
+                { "key": "search", "value": "Modern" },
+                { "key": "categoryId", "value": "3" },
+                { "key": "sort", "value": "price_desc" }
+              ]
+            }
+          },
+          "description": "Get all products. Optional query params: search (by name), categoryId, sort=price_asc|price_desc."
+        },
         { "name": "Get Product By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/products/:id" } },
         { "name": "Create Product", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/products", "body": { "mode": "raw", "raw": "{\n  \"productName\": \"Sample Painting\",\n  \"briefDescription\": \"A beautiful painting\",\n  \"fullDescription\": \"Full details...\",\n  \"technicalSpecifications\": \"Oil on canvas\",\n  \"price\": 100,\n  \"imageURL\": \"https://example.com/image.jpg\",\n  \"categoryID\": 1\n}" } } },
         { "name": "Update Product", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/products/:id", "body": { "mode": "raw", "raw": "{\n  \"productName\": \"Updated Painting\"\n}" } } },
@@ -160,7 +175,7 @@
         { "name": "Get All Orders", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders" } },
         { "name": "Get Order By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } },
         { "name": "Get Orders By User ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/user/:userId" } },
-{ "name": "Create Order", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/orders", "body": { "mode": "raw", "raw": "{\n  \"cartID\": 1,\n  \"userID\": 1,\n  \"paymentMethod\": \"VNPay\",\n  \"billingAddress\": \"123 Art St\",\n  \"orderStatus\": \"processing\",\n  \"orderDate\": \"2025-07-02T00:00:00.000Z\"\n}" } } },
+        { "name": "Checkout (CashOnDelivery or Momo)", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/orders/checkout/CashOnDelivery", "body": { "mode": "raw", "raw": "{\n  \"userId\": 1,\n  \"cartId\": 1\n}" } } },
         { "name": "Update Order", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id", "body": { "mode": "raw", "raw": "{\n  \"orderStatus\": \"shipped\"\n}" } } },
         { "name": "Delete Order", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } }
       ]

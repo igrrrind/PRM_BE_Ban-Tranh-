@@ -14,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Cart.belongsTo(models.User, { foreignKey: 'userID' });
       // Cart hasMany CartItem
       Cart.hasMany(models.CartItem, { foreignKey: 'cartID' });
-      // Cart hasOne Order
-      Cart.hasOne(models.Order, { foreignKey: 'cartID' });
+      // Cart hasOne Order (REMOVED: Order no longer references cart)
     }
   }
   Cart.init({

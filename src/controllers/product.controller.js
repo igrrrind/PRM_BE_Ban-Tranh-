@@ -3,9 +3,26 @@ const { Product, Category } = require('../models');
 // Get all products with category
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.findAll({
+    const { search, categoryId, sort } = req.query;
+    const where = {};
+    if (search) {
+      where.productName = { [require('sequelize').Op.like]: `%${search}%` };
+    }
+    if (categoryId) {
+      where.categoryID = categoryId;
+    }
+    let order;
+    if (sort === 'price_asc') {
+      order = [['price', 'ASC']];
+    } else if (sort === 'price_desc') {
+      order = [['price', 'DESC']];
+    }
+    const findAllOptions = {
+      where,
       include: [{ model: Category, as: 'category' }]
-    });
+    };
+    if (order) findAllOptions.order = order;
+    const products = await Product.findAll(findAllOptions);
     res.json(products);
   } catch (err) {
     res.status(500).json({ error: err.message });

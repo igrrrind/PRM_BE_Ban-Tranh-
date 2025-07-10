@@ -5,7 +5,6 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Orders', [
       {
-        cartID: 1,
         userID: 2,
         paymentMethod: 'VNPay',
         billingAddress: '456 Canvas Ave, Paint City',

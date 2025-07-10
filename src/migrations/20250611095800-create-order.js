@@ -9,15 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      cartID: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Carts',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-      },
+      // cartID removed
       userID: {
         type: Sequelize.INTEGER,
         references: {

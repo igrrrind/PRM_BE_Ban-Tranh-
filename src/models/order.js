@@ -10,16 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // Order belongsTo Cart
-      Order.belongsTo(models.Cart, { foreignKey: 'cartID' });
       // Order belongsTo User
       Order.belongsTo(models.User, { foreignKey: 'userID' });
       // Order hasOne Payment
       Order.hasOne(models.Payment, { foreignKey: 'orderID' });
+      // Order hasMany OrderItem
+      Order.hasMany(models.OrderItem, { foreignKey: 'orderID' });
     }
   }
   Order.init({
-    cartID: DataTypes.INTEGER,
     userID: DataTypes.INTEGER,
     paymentMethod: DataTypes.STRING,
     billingAddress: DataTypes.STRING,
