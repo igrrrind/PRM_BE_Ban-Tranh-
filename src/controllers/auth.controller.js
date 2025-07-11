@@ -5,8 +5,10 @@ const bcrypt = require('bcryptjs');
 exports.register = async (req, res) => {
   try {
     const { username, password, email, phoneNumber, address, role } = req.body;
-    const existing = await User.findOne({ where: { username } });
-    if (existing) return res.status(400).json({ error: 'Username already exists' });
+    const existing = await User.findOne({ where: { email } });
+    const existing2 = await User.findOne({ where: { username } });
+    if (existing) return res.status(400).json({ error: 'Email already exists' });
+    if (existing2) return res.status(400).json({ error: 'Username already exists' });
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ username, passwordHash: hash, email, phoneNumber, address, role });
     res.status(201).json({ message: 'User registered', user: { id: user.id, username: user.username, email: user.email } });
