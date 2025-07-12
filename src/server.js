@@ -10,6 +10,7 @@ const chatMessageRoutes = require('./routes/chatmessage.routes');
 const storeLocationRoutes = require('./routes/storelocation.routes');
 const authRoutes = require('./routes/auth.routes');
 const db = require('./models');
+const vnpayRoutes = require('./routes/vnpay.routes');
 const cors = require('cors');
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/chatmessages', chatMessageRoutes);
 app.use('/api/storelocations', storeLocationRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/vnpay', vnpayRoutes);
 
 const startServer = async () => {
   try {
