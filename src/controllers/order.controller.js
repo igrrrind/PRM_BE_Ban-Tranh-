@@ -1,57 +1,108 @@
 const { Order, OrderItem, Product, Cart, User, Payment } = require('../models');
+const vnpay = require('../config/vnpay.config');
 
-  exports.checkout = async (req, res) => {
-    try {
-      const { userId, cartId, billingAddress } = req.body;
-      const { type } = req.params; // 'CashOnDelivery' or 'Momo'
-      if (!userId || !cartId || !type) return res.status(400).json({ error: 'userId, cartId, and type are required' });
+exports.checkout = async (req, res) => {
+  try {
+    const { userId, cartId, billingAddress } = req.body;
+    const { type } = req.params; // 'CashOnDelivery' or 'VNPay'
 
-      if (type === 'CashOnDelivery') {
-        // Find cart and items
-        const cart = await Cart.findOne({ where: { id: cartId, userID: userId }, include: ['CartItems'] });
-        if (!cart) return res.status(404).json({ error: 'Cart not found' });
-        if (!cart.CartItems || cart.CartItems.length === 0) return res.status(400).json({ error: 'Cart is empty' });
-
-        // Create order (no cartID)
-        const order = await Order.create({
-          userID: userId,
-          billingAddress,
-          orderStatus: 'processing',
-          paymentMethod: 'CashOnDelivery',
-          orderDate: new Date()
-        });
-
-        // Convert cart items to order items
-        for (const item of cart.CartItems) {
-          // Optionally fetch product price if not stored in cart item
-          let price = item.price;
-          if (price == null) {
-            const product = await Product.findByPk(item.productID);
-            price = product ? product.price : 0;
-          }
-          await OrderItem.create({
-            orderID: order.id,
-            productID: item.productID,
-            quantity: item.quantity,
-            price
-          });
-        }
-
-        // Clear cart items after successful checkout
-        await CartItem.destroy({ where: { cartID: cartId } });
-        return res.json({ success: true, orderId: order.id });
-      }
-
-      if (type === 'Momo') {
-        // For now, just return a success message
-        return res.json({ success: true, message: 'Momo checkout simulated.' });
-      }
-
-      return res.status(400).json({ error: 'Invalid checkout type' });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+    if (!userId || !cartId || !type) {
+      return res.status(400).json({ error: 'userId, cartId, and type are required' });
     }
-  };
+
+    // Tìm giỏ hàng
+    const cart = await Cart.findOne({
+      where: { id: cartId, userID: userId },
+      include: ['CartItems']
+    });
+
+    if (!cart) return res.status(404).json({ error: 'Cart not found' });
+    if (!cart.CartItems || cart.CartItems.length === 0) return res.status(400).json({ error: 'Cart is empty' });
+
+    // Tính tổng tiền
+    let totalAmount = 0;
+    for (const item of cart.CartItems) {
+      let price = item.price;
+      if (price == null) {
+        const product = await Product.findByPk(item.productID);
+        price = product ? product.price : 0;
+      }
+      totalAmount += price * item.quantity;
+    }
+
+    // Nếu CashOnDelivery
+    if (type === 'CashOnDelivery') {
+      const order = await Order.create({
+        userID: userId,
+        billingAddress,
+        orderStatus: 'processing',
+        paymentMethod: 'CashOnDelivery',
+        orderDate: new Date()
+      });
+
+      for (const item of cart.CartItems) {
+        let price = item.price;
+        if (price == null) {
+          const product = await Product.findByPk(item.productID);
+          price = product ? product.price : 0;
+        }
+        await OrderItem.create({
+          orderID: order.id,
+          productID: item.productID,
+          quantity: item.quantity,
+          price
+        });
+      }
+
+      await CartItem.destroy({ where: { cartID: cartId } });
+
+      return res.json({ success: true, orderId: order.id });
+    }
+
+    // Nếu VNPay
+    if (type === 'VNPay') {
+     
+
+      // Tạo đơn hàng trước (status = pending)
+      const order = await Order.create({
+        userID: userId,
+        billingAddress,
+        orderStatus: 'processing',
+        paymentMethod: 'VNPay',
+        orderDate: new Date(),
+      });
+      
+      for (const item of cart.CartItems) {
+        let price = item.price;
+        if (price == null) {
+          const product = await Product.findByPk(item.productID);
+          price = product ? product.price : 0;
+        }
+        await OrderItem.create({
+          orderID: order.id,
+          productID: item.productID,
+          quantity: item.quantity,
+          price
+        });
+      }
+
+      const paymentUrl = vnpay.buildPaymentUrl({
+        vnp_Amount: totalAmount, // VNP yêu cầu đơn vị là "đồng x 100"
+        vnp_IpAddr: req.ip,
+        vnp_ReturnUrl: process.env.VNP_RETURN_URL,
+        vnp_TxnRef: order.id,
+        vnp_OrderInfo: `Thanh toán đơn hàng #${order.id}`
+      });
+
+      return res.json({ success: true, paymentUrl });
+    }
+
+    return res.status(400).json({ error: 'Invalid checkout type' });
+  } catch (err) {
+    console.error('[checkout error]', err);
+    return res.status(500).json({ error: err.message });
+  }
+};
 
   // Get all orders with cart, user, and payment
   exports.getAllOrders = async (req, res) => {

@@ -1,5 +1,5 @@
 const vnpay = require('../config/vnpay.config');
-
+const { Order } = require('../models');
 exports.createPayment = (req, res) => {
   try {
     const { amount, orderInfo } = req.body;
@@ -18,32 +18,57 @@ exports.createPayment = (req, res) => {
   }
 };
 
-exports.handleReturn = (req, res) => {
-    const verify = vnpay.verifyReturnUrl(req.query);
-  
-    const redirectBase = process.env.VNP_FRONTEND_RETURN || '';
-    const isDeepLink = redirectBase.startsWith('myapp://');
-  
-    if (isDeepLink) {
-      // ❌ Trình duyệt không mở được deep link → dùng send() để test
-      return res.send(`
-        <h2>🔄 Kết quả thanh toán</h2>
-        <p><strong>Trạng thái:</strong> ${verify.isSuccess ? '✅ Thành công' : '❌ Thất bại'}</p>
-        <p><strong>Mã đơn hàng:</strong> ${req.query.vnp_TxnRef}</p>
-        <p><strong>Chi tiết:</strong> ${verify.message || 'Không rõ'}</p>
-      `);
+exports.handleReturn = async (req, res) => {
+  const verify = vnpay.verifyReturnUrl(req.query);
+  const id = req.query.vnp_TxnRef;
+
+  const redirectBase = process.env.VNP_FRONTEND_RETURN || '';
+  const isDeepLink = redirectBase.startsWith('cuahangtranh://');
+
+  // ✅ Nếu thanh toán thành công thì cập nhật đơn hàng
+  if (verify.isSuccess) {
+    try {
+      const order = await Order.findOne({ where: { id } });
+      if (order) {
+        order.orderStatus = 'shipped'; // hoặc 'paid'
+        await order.save();
+      }
+    } catch (error) {
+      console.error('❌ Lỗi khi cập nhật đơn hàng:', error);
     }
-  
-    // ✅ Có thể redirect đến web app hoặc domain
-    const redirectUrl = new URL(redirectBase);
-    if (verify.isSuccess) {
-      redirectUrl.searchParams.set('status', 'success');
-      redirectUrl.searchParams.set('orderId', req.query.vnp_TxnRef);
-    } else {
-      redirectUrl.searchParams.set('status', 'fail');
-      redirectUrl.searchParams.set('message', verify.message || 'Thanh toán thất bại');
-    }
-  
-    return res.redirect(redirectUrl.toString());
-  };
+  }
+
+  // Tạo URL redirect về app hoặc web
+  const redirectUrl = new URL(redirectBase);
+  if (verify.isSuccess) {
+    redirectUrl.searchParams.set('status', 'success');
+    redirectUrl.searchParams.set('orderId', id);
+  } else {
+    redirectUrl.searchParams.set('status', 'fail');
+    redirectUrl.searchParams.set('message', verify.message || 'Thanh toán thất bại');
+  }
+
+  // Gửi HTML mở deep link hoặc redirect về web
+  if (isDeepLink) {
+    return res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>Đang chuyển hướng</title></head>
+        <body>
+          <script>
+            setTimeout(() => {
+              window.location.href = "${redirectUrl.toString()}";
+            }, 500);
+            setTimeout(() => {
+              document.body.innerHTML += "<p style='color:red;'>Không mở được ứng dụng.</p>";
+            }, 3000);
+          </script>
+          <h2>🔄 Đang chuyển hướng...</h2>
+        </body>
+      </html>
+    `);
+  }
+
+  return res.redirect(redirectUrl.toString());
+};
   
