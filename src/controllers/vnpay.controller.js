@@ -1,5 +1,6 @@
 const vnpay = require('../config/vnpay.config');
 const { Cart, CartItem, Product, Order, OrderItem } = require('../models');
+const order = require('../models/order');
 exports.createPayment = (req, res) => {
   try {
     const { amount, orderInfo } = req.body;
@@ -72,7 +73,7 @@ exports.handleReturn = async (req, res) => {
   const redirectUrl = new URL(redirectBase);
   if (verify.isSuccess) {
     redirectUrl.searchParams.set('status', 'success');
-    redirectUrl.searchParams.set('orderId', req.query.vnp_TxnRef); // bạn có thể đổi thành order.id nếu muốn
+    redirectUrl.searchParams.set('orderId', order.id); // bạn có thể đổi thành order.id nếu muốn
   } else {
     redirectUrl.searchParams.set('status', 'fail');
     redirectUrl.searchParams.set('message', verify.message || 'Thanh toán thất bại');
