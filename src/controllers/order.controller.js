@@ -61,41 +61,31 @@ exports.checkout = async (req, res) => {
 
     // Nếu VNPay
     if (type === 'VNPay') {
-     
-
-      // Tạo đơn hàng trước (status = pending)
-      const order = await Order.create({
-        userID: userId,
-        billingAddress,
-        orderStatus: 'processing',
-        paymentMethod: 'VNPay',
-        orderDate: new Date(),
-      });
-      
+      // Tính tổng tiền
+      let totalAmount = 0;
       for (const item of cart.CartItems) {
         let price = item.price;
         if (price == null) {
           const product = await Product.findByPk(item.productID);
           price = product ? product.price : 0;
         }
-        await OrderItem.create({
-          orderID: order.id,
-          productID: item.productID,
-          quantity: item.quantity,
-          price
-        });
+        totalAmount += price * item.quantity;
       }
-
+    
+      // Lưu tạm cartId + userId trong vnp_TxnRef để dùng lại
+      const vnp_TxnRef = `${cartId}_${userId}_${Date.now()}`; // ví dụ: 5_2_175239xxxx
+    
       const paymentUrl = vnpay.buildPaymentUrl({
-        vnp_Amount: totalAmount, // VNP yêu cầu đơn vị là "đồng x 100"
+        vnp_Amount: totalAmount * 100,
         vnp_IpAddr: req.ip,
         vnp_ReturnUrl: process.env.VNP_RETURN_URL,
-        vnp_TxnRef: order.id,
-        vnp_OrderInfo: `Thanh toán đơn hàng #${order.id}`
+        vnp_TxnRef,
+        vnp_OrderInfo: `Thanh toán đơn hàng qua VNPay`,
       });
-
+    
       return res.json({ success: true, paymentUrl });
     }
+    
 
     return res.status(400).json({ error: 'Invalid checkout type' });
   } catch (err) {
