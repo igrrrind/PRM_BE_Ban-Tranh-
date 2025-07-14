@@ -42,8 +42,17 @@ exports.updateCartItem = async (req, res) => {
     const cartItem = await CartItem.findOne({ where: { cartID: cart.id, productID: productId } });
     if (!cartItem) return res.status(404).json({ error: 'Cart item not found' });
     cartItem.quantity = quantity;
+    // Update cart total
+    const allItems = await CartItem.findAll({ where: { cartID: cart.id } });
+    const total = allItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    cart.totalPrice = total;
+    await cart.save();
     await cartItem.save();
-    res.json(cartItem);
+    res.json({
+      message: 'Cart item updated successfully',
+      cartItem,
+      cartTotal: cart.totalPrice
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -60,6 +69,12 @@ exports.removeFromCart = async (req, res) => {
     const cartItem = await CartItem.findOne({ where: { cartID: cart.id, productID: productId } });
     if (!cartItem) return res.status(404).json({ error: 'Cart item not found' });
     await cartItem.destroy();
+    
+    const allItems = await CartItem.findAll({ where: { cartID: cart.id } });
+    const total = allItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    cart.totalPrice = total;
+    await cart.save();
+
     res.json({ message: 'Product removed from cart' });
   } catch (err) {
     res.status(400).json({ error: err.message });
