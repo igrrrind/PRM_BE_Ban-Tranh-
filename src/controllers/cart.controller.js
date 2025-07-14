@@ -42,12 +42,13 @@ exports.updateCartItem = async (req, res) => {
     const cartItem = await CartItem.findOne({ where: { cartID: cart.id, productID: productId } });
     if (!cartItem) return res.status(404).json({ error: 'Cart item not found' });
     cartItem.quantity = quantity;
+    await cartItem.save();
+
     // Update cart total
     const allItems = await CartItem.findAll({ where: { cartID: cart.id } });
     const total = allItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
     cart.totalPrice = total;
     await cart.save();
-    await cartItem.save();
     res.json({
       message: 'Cart item updated successfully',
       cartItem,
