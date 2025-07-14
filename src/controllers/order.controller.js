@@ -35,9 +35,10 @@ exports.checkout = async (req, res) => {
       const order = await Order.create({
         userID: userId,
         billingAddress,
-        orderStatus: 'processing',
-        paymentMethod: 'CashOnDelivery',
-        orderDate: new Date()
+        orderStatus: 'shipped',
+        paymentMethod: 'COD',
+        orderDate: new Date(),
+        total: totalAmount
       });
 
       for (const item of cart.CartItems) {
