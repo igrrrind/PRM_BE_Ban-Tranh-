@@ -26,10 +26,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       orderStatus: {
-        type: Sequelize.STRING
+          type: Sequelize.ENUM('processing', 'shipped', 'delivered', 'cancelled'),
+          defaultValue: 'processing',
       },
       orderDate: {
         type: Sequelize.DATE
+      },
+      total: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

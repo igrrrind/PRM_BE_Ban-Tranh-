@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     paymentMethod: DataTypes.STRING,
     billingAddress: DataTypes.STRING,
     orderStatus: DataTypes.STRING,
-    orderDate: DataTypes.DATE
+    orderDate: DataTypes.DATE,
+    total: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Order',

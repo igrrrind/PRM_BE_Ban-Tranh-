@@ -46,7 +46,7 @@
         { "name": "Get All Categories", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/categories" } },
         { "name": "Get Category By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id" } },
         { "name": "Create Category", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/categories", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"New Category\"\n}" } } },
-{ "name": "Update Category", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"Updated Category\"\n}" } } },
+        { "name": "Update Category", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id", "body": { "mode": "raw", "raw": "{\n  \"categoryName\": \"Updated Category\"\n}" } } },
         { "name": "Delete Category", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/categories/:id" } }
       ]
     },
@@ -175,7 +175,7 @@
         { "name": "Get All Orders", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders" } },
         { "name": "Get Order By ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } },
         { "name": "Get Orders By User ID", "request": { "method": "GET", "url": "https://web-production-b71f7.up.railway.app/api/orders/user/:userId" } },
-        { "name": "Checkout (CashOnDelivery or Momo)", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/orders/checkout/CashOnDelivery", "body": { "mode": "raw", "raw": "{\n  \"userId\": 1,\n  \"cartId\": 1\n}" } } },
+        { "name": "Checkout (CashOnDelivery or VNPay)", "request": { "method": "POST", "url": "https://web-production-b71f7.up.railway.app/api/orders/checkout/CashOnDelivery", "body": { "mode": "raw", "raw": "{\n  \"userId\": 1,\n  \"cartId\": 1\n}" } } },
         { "name": "Update Order", "request": { "method": "PUT", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id", "body": { "mode": "raw", "raw": "{\n  \"orderStatus\": \"shipped\"\n}" } } },
         { "name": "Delete Order", "request": { "method": "DELETE", "url": "https://web-production-b71f7.up.railway.app/api/orders/:id" } }
       ]

@@ -1,6 +1,6 @@
-const vnpay = require('../config/vnpay.config');
-const { Cart, CartItem, Product, Order, OrderItem } = require('../models');
-const order = require('../models/order');
+const vnpay = require("../config/vnpay.config");
+const { Cart, CartItem, Product, Order, OrderItem } = require("../models");
+const order = require("../models/order");
 exports.createPayment = (req, res) => {
   try {
     const { amount, orderInfo } = req.body;
@@ -10,7 +10,7 @@ exports.createPayment = (req, res) => {
       vnp_IpAddr: req.ip,
       vnp_ReturnUrl: process.env.VNP_RETURN_URL,
       vnp_TxnRef: `ORDER_${Date.now()}`,
-      vnp_OrderInfo: orderInfo || 'Thanh toán đơn hàng demo',
+      vnp_OrderInfo: orderInfo || "Thanh toán đơn hàng demo",
     });
 
     return res.json({ success: true, paymentUrl });
@@ -20,38 +20,57 @@ exports.createPayment = (req, res) => {
 };
 
 exports.handleReturn = async (req, res) => {
-  const verify = vnpay.verifyReturnUrl(req.query);
-  const txnRef = req.query.vnp_TxnRef; // dạng: cartId_userId_timestamp
+  console.log("🌿 [handleReturn] VNPay return received.");
+  console.log("🔹 Query Params:", JSON.stringify(req.query, null, 2));
 
-  const redirectBase = process.env.VNP_FRONTEND_RETURN || '';
-  const isDeepLink = redirectBase.startsWith('cuahangtranh://');
+  const verify = vnpay.verifyReturnUrl(req.query);
+  console.log("🔹 verifyReturnUrl:", verify);
+
+  const txnRef = req.query.vnp_TxnRef; // dạng: cartId_userId_timestamp
+  console.log("🔹 txnRef:", txnRef);
+
+  const redirectBase = process.env.VNP_FRONTEND_RETURN || "";
+  const isDeepLink = redirectBase.startsWith("cuahangtranh://");
+  console.log("🔹 redirectBase:", redirectBase);
+  console.log("🔹 isDeepLink:", isDeepLink);
+
+  let order = null; // moved here to avoid undefined reference
 
   // ✅ Nếu thanh toán thành công → tạo đơn hàng
   if (verify.isSuccess) {
     try {
-      const [cartId, userId] = txnRef.split('_');
+      const [cartId, userId] = txnRef.split("_");
+      console.log("🔹 cartId:", cartId);
+      console.log("🔹 userId:", userId);
 
-      // Lấy cart và item
       const cart = await Cart.findOne({
         where: { id: cartId, userID: userId },
-        include: ['CartItems'],
+        include: ["CartItems"],
       });
+      console.log("🔹 Cart found:", !!cart);
+      if (cart) {
+        console.log("🔹 Cart Items count:", cart.CartItems.length);
+      }
 
       if (cart && cart.CartItems.length > 0) {
-        // Tạo đơn hàng
-        const order = await Order.create({
+        order = await Order.create({
           userID: userId,
-          billingAddress: cart.billingAddress || 'Địa chỉ chưa cập nhật',
-          orderStatus: 'shipped', // thanh toán xong là giao hàng luôn
-          paymentMethod: 'VNPay',
+          billingAddress: cart.billingAddress || "Địa chỉ chưa cập nhật",
+          orderStatus: "shipped", // thanh toán xong là giao hàng luôn
+          paymentMethod: "VNPay",
           orderDate: new Date(),
+          total: cart.total,
         });
+        console.log("✅ Order created:", order.id);
 
         for (const item of cart.CartItems) {
           let price = item.price;
           if (price == null) {
             const product = await Product.findByPk(item.productID);
             price = product ? product.price : 0;
+            if (!product) {
+              console.warn(`⚠️ Product with ID ${item.productID} not found, using price 0.`);
+            }
           }
           await OrderItem.create({
             orderID: order.id,
@@ -59,40 +78,50 @@ exports.handleReturn = async (req, res) => {
             quantity: item.quantity,
             price,
           });
+          console.log(`✅ OrderItem created for product ${item.productID} with price ${price}`);
         }
 
-        // Xoá cart sau khi tạo order
         await CartItem.destroy({ where: { cartID: cartId } });
+        console.log(`✅ CartItems for cartID ${cartId} deleted.`);
+      } else {
+        console.warn(`⚠️ Cart not found or empty for cartId: ${cartId}, userId: ${userId}`);
       }
     } catch (error) {
-      console.error('❌ Lỗi khi tạo đơn hàng sau thanh toán:', error);
+      console.error("❌ Error creating order after payment:", error);
     }
+  } else {
+    console.warn("⚠️ Payment verification failed, skipping order creation.");
   }
 
-  // 🔁 Redirect logic như cũ
+  // 🔁 Redirect logic
   const redirectUrl = new URL(redirectBase);
-  if (verify.isSuccess) {
-    redirectUrl.searchParams.set('status', 'success');
-    redirectUrl.searchParams.set('orderId', order.id); // bạn có thể đổi thành order.id nếu muốn
+  if (verify.isSuccess && order) {
+    redirectUrl.searchParams.set("status", "success");
+    redirectUrl.searchParams.set("orderId", order.id);
   } else {
-    redirectUrl.searchParams.set('status', 'fail');
-    redirectUrl.searchParams.set('message', verify.message || 'Thanh toán thất bại');
+    redirectUrl.searchParams.set("status", "fail");
+    redirectUrl.searchParams.set(
+      "message",
+      verify.message || "Thanh toán thất bại"
+    );
   }
+
+  console.log("🔹 Redirecting to:", redirectUrl.toString());
 
   if (isDeepLink) {
-    return res.send(`
+    return res.status(200).send(`
       <!DOCTYPE html>
       <html>
-        <head><title>Đang chuyển hướng</title></head>
-        <body>
+        <head>
+          <title>Đang chuyển hướng</title>
+          <meta http-equiv="refresh" content="0;url=${redirectUrl.toString()}" />
           <script>
             setTimeout(() => {
-              window.location.href = "${redirectUrl.toString()}";
+              window.location.replace("${redirectUrl.toString()}");
             }, 500);
-            setTimeout(() => {
-              document.body.innerHTML += "<p style='color:red;'>Không mở được ứng dụng.</p>";
-            }, 3000);
           </script>
+        </head>
+        <body>
           <h2>🔄 Đang chuyển hướng...</h2>
         </body>
       </html>
@@ -102,4 +131,3 @@ exports.handleReturn = async (req, res) => {
   return res.redirect(redirectUrl.toString());
 };
 
-  

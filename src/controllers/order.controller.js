@@ -130,8 +130,8 @@ exports.getOrderById = async (req, res) => {
 // Create order
 exports.createOrder = async (req, res) => {
   try {
-    const { userID, orderStatus, paymentMethod, orderDate } = req.body;
-    const order = await Order.create({ userID, orderStatus, paymentMethod, orderDate });
+    const { userID, orderStatus, paymentMethod, orderDate, total } = req.body;
+    const order = await Order.create({ userID, orderStatus, paymentMethod, orderDate, total });
     res.status(201).json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
