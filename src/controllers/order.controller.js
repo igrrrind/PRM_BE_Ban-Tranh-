@@ -20,15 +20,15 @@ exports.checkout = async (req, res) => {
     if (!cart.CartItems || cart.CartItems.length === 0) return res.status(400).json({ error: 'Cart is empty' });
 
     // Tính tổng tiền
-    let totalAmount = 0;
-    for (const item of cart.CartItems) {
-      let price = item.price;
-      if (price == null) {
-        const product = await Product.findByPk(item.productID);
-        price = product ? product.price : 0;
-      }
-      totalAmount += price * item.quantity;
-    }
+    let totalAmount = cart.totalPrice
+    // for (const item of cart.CartItems) {
+    //   let price = item.price;
+    //   if (price == null) {
+    //     const product = await Product.findByPk(item.productID);
+    //     price = product ? product.price : 0;
+    //   }
+    //   totalAmount += price * item.quantity;
+    // }
 
     // Nếu CashOnDelivery
     if (type === 'CashOnDelivery') {
@@ -62,21 +62,13 @@ exports.checkout = async (req, res) => {
     // Nếu VNPay
     if (type === 'VNPay') {
       // Tính tổng tiền
-      let totalAmount = 0;
-      for (const item of cart.CartItems) {
-        let price = item.price;
-        if (price == null) {
-          const product = await Product.findByPk(item.productID);
-          price = product ? product.price : 0;
-        }
-        totalAmount += price * item.quantity;
-      }
+      let totalAmount = cart.totalPrice
     
       // Lưu tạm cartId + userId trong vnp_TxnRef để dùng lại
       const vnp_TxnRef = `${cartId}_${userId}_${Date.now()}`; // ví dụ: 5_2_175239xxxx
     
       const paymentUrl = vnpay.buildPaymentUrl({
-        vnp_Amount: totalAmount * 100,
+        vnp_Amount: totalAmount,
         vnp_IpAddr: req.ip,
         vnp_ReturnUrl: process.env.VNP_RETURN_URL,
         vnp_TxnRef,

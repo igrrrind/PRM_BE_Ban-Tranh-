@@ -1,6 +1,7 @@
 const vnpay = require("../config/vnpay.config");
-const { Cart, CartItem, Product, Order, OrderItem } = require("../models");
+const { Cart, CartItem, Product, Order, OrderItem, Payment } = require("../models");
 const order = require("../models/order");
+const payment = require("../models/payment");
 exports.createPayment = (req, res) => {
   try {
     const { amount, orderInfo } = req.body;
@@ -35,6 +36,7 @@ exports.handleReturn = async (req, res) => {
   console.log("🔹 isDeepLink:", isDeepLink);
 
   let order = null; // moved here to avoid undefined reference
+  let payment = null
 
   // ✅ Nếu thanh toán thành công → tạo đơn hàng
   if (verify.isSuccess) {
@@ -59,9 +61,16 @@ exports.handleReturn = async (req, res) => {
           orderStatus: "shipped", // thanh toán xong là giao hàng luôn
           paymentMethod: "VNPay",
           orderDate: new Date(),
-          total: cart.total,
+          total: cart.totalPrice,
         });
         console.log("✅ Order created:", order.id);
+
+        payment = await Payment.create({
+          orderID: order.id,
+          amount: cart.totalPrice,
+          paymentDate: new Date(),
+          paymentStatus: "paid", // or "completed" based on your enums
+        });
 
         for (const item of cart.CartItems) {
           let price = item.price;
