@@ -1,4 +1,4 @@
-const { Order, OrderItem, Product, Cart, User, Payment } = require('../models');
+const { Order, OrderItem, Product, Cart, CartItem, User, Payment } = require('../models');
 const vnpay = require('../config/vnpay.config');
 
 exports.checkout = async (req, res) => {
