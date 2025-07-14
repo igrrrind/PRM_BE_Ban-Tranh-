@@ -12,7 +12,7 @@ exports.checkout = async (req, res) => {
 
     // Tìm giỏ hàng
     const cart = await Cart.findOne({
-      where: { id: cartId, userID: userId },
+      where: { id: cartId },
       include: ['CartItems']
     });
 
@@ -34,7 +34,7 @@ exports.checkout = async (req, res) => {
     if (type === 'CashOnDelivery') {
       const order = await Order.create({
         userID: userId,
-        billingAddress,
+        billingAddress: billingAddress ?? "Chưa xác định",
         orderStatus: 'shipped',
         paymentMethod: 'COD',
         orderDate: new Date(),
