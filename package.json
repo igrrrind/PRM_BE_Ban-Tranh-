@@ -29,6 +29,7 @@
     "mysql2": "^3.14.1",
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.3",
+    "serverless-http": "^3.2.0",
     "vnpay": "^2.4.0"
   },
   "devDependencies": {
