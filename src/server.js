@@ -22,7 +22,7 @@ app.use(cors());
 app.get('/', (req, res) => {
   res.send('Server is running!');
 });
-// Routes
+// Routes redeploy
 app.use('/api/user', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
